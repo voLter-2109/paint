@@ -6,6 +6,7 @@ let btnReset = document.querySelector(".btnReset");
 
 // сохранить
 btnSave.addEventListener("click", function () {
+  //  как найти этот файл в локальной памяти хрома?
   localStorage.setItem("cords", JSON.stringify(cord));
 });
 // воспроизвести

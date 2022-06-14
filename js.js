@@ -46,7 +46,7 @@ class ColorPaint {
   constructor(selectorCanvas, inputSelectorWidth, myRangeText, cord) {
     this.canvas = document.querySelector(selectorCanvas);
     this.ctx = canvas.getContext("2d");
-    this.isMouseDown = Boolean;
+    this.isMouseDown = false;
     this.inputValueWidth = document.querySelector(inputSelectorWidth);
     this.lineWid = myRangeText.innerHTML;
     this.parentMargin = canvas.parentElement.getBoundingClientRect();
@@ -150,6 +150,7 @@ btnSave.addEventListener("click", function (e) {
   //  как найти этот файл в локальной памяти хрома?
   localStorage.setItem("cords", JSON.stringify(cord));
   btnSave.disabled = true;
+  btnPlay.disabled = false;
 });
 // воспроизвести
 btnPlay.addEventListener("click", function (e) {
@@ -207,6 +208,9 @@ btnPlay.addEventListener("click", function (e) {
         ctx.moveTo(e.clientX, e.clientY);
 
     }, 30);
+    let textPushText = document.querySelector(".textPushText");
+    textPushText.innerHTML = "Что бы начать заного нажмите RESET";
+
   }
 
   replay();

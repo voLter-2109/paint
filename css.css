@@ -28,6 +28,13 @@ body {
   user-select: none;
 }
 
+.textPushText {
+font-weight: bold;
+text-decoration: underline red 5px;
+/* text-decoration-color: red; */
+
+}
+
 .func > button {
   padding: 5px 10px;
   margin-top: 10px;

@@ -46,7 +46,7 @@ class ColorPaint {
   constructor(selectorCanvas, inputSelectorWidth, myRangeText, cord) {
     this.canvas = document.querySelector(selectorCanvas);
     this.ctx = canvas.getContext("2d");
-    this.isMouseDown;
+    this.isMouseDown = Boolean;
     this.inputValueWidth = document.querySelector(inputSelectorWidth);
     this.lineWid = myRangeText.innerHTML;
     this.parentMargin = canvas.parentElement.getBoundingClientRect();
@@ -92,8 +92,8 @@ class ColorPaint {
           // test
           that.lineWid,
           that.ctx.fillStyle,
-          that.ctx.strokeStyle
-          // 
+          that.ctx.strokeStyle,
+          //
         ]);
         that.ctx.lineTo(
           e.clientX - that.parentMargin.left,
@@ -137,11 +137,95 @@ const paint = new ColorPaint(
   cord
 ).start();
 
-// вывод массива с координатами из класса
-// let qwe = document.querySelector(".qwe");
-// qwe.addEventListener("click", function (e) {
-//   e.preventDefault();
-//   console.log(cord);
-// });
+
+
+// добавление функций для взаимодействия с текущим рисунком
+let func = document.querySelector(".func");
+let btnSave = document.querySelector(".btnSave");
+let btnPlay = document.querySelector(".btnPlay");
+let btnReset = document.querySelector(".btnReset");
+
+// сохранить
+btnSave.addEventListener("click", function (e) {
+  //  как найти этот файл в локальной памяти хрома?
+  localStorage.setItem("cords", JSON.stringify(cord));
+  btnSave.disabled = true;
+});
+// воспроизвести
+btnPlay.addEventListener("click", function (e) {
+  cord = JSON.parse(localStorage.getItem("cords"));
+  function clear() {
+    ctx.fillStyle = "white";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.beginPath();
+    ctx.fillStyle = "black";
+  }
+  clear();
+  function replay() {
+    let timer = setInterval(function () {
+      if (localStorage.getItem("cords") !== null) {
+        clearInterval(timer);
+        ctx.beginPath();
+        return;
+      }
+     
+
+        // как добавить повторное сохранение , пока работает только при перезагрузке стрицы
+        ctx.lineWidth = 1;
+
+        let crd = cord.shift();
+        if (crd !== undefined) {
+        e = {
+          clientX: crd[0],
+          clientY: crd[1],
+          // test
+          lineWid: crd[2],
+          fillStyle: crd[3],
+          strokeStyle: crd[4],
+          //
+        }; 
+      } else {
+        return;
+      }
+
+        ctx.lineWidth = e.lineWid;
+        ctx.lineTo(e.clientX, e.clientY);
+        ctx.stroke();
+        // test
+        ctx.fillStyle = e.fillStyle;
+        //
+        ctx.beginPath();
+        // test
+        ctx.strokeStyle = e.strokeStyle;
+        // 
+        ctx.arc(e.clientX, e.clientY, e.lineWid / 2, 0, Math.PI * 2);
+        ctx.fill();
+
+       
+        ctx.beginPath();
+       
+        ctx.moveTo(e.clientX, e.clientY);
+
+    }, 30);
+  }
+
+  replay();
+  localStorage.clear();
+  //
+  btnPlay.disabled = true;
+  canvas.style.pointerEvents = "none";
+  btnReset.style.border = "2px solid red";
+});
+// пока сброс локальной памяти и воспроизведение нового рисунка работает 
+// через перезагрузку страницы при нажатии на кнопку reset
+// очистить
+btnReset.addEventListener("click", function (e) {
+  ctx.fillStyle = "white";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.beginPath();
+  ctx.fillStyle = "black";
+  localStorage.clear();
+  location.reload();
+});
 
 
